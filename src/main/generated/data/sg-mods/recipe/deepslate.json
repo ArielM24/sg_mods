@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "group": "deepslate",
+  "key": {
+    "l": "minecraft:stone"
+  },
+  "pattern": [
+    "lll",
+    "lll",
+    "lll"
+  ],
+  "result": {
+    "count": 4,
+    "id": "minecraft:deepslate"
+  }
+}

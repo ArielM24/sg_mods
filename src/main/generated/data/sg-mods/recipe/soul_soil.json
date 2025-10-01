@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "group": "soul soil",
+  "key": {
+    "l": "minecraft:soul_sand",
+    "w": "minecraft:bone_block"
+  },
+  "pattern": [
+    "lw",
+    "wl"
+  ],
+  "result": {
+    "count": 4,
+    "id": "minecraft:soul_soil"
+  }
+}

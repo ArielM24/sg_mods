@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "group": "end stone",
+  "key": {
+    "l": "minecraft:cobblestone",
+    "w": "minecraft:sandstone"
+  },
+  "pattern": [
+    "lw",
+    "wl"
+  ],
+  "result": {
+    "count": 4,
+    "id": "minecraft:end_stone"
+  }
+}

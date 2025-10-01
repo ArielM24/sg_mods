@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:blasting",
+  "category": "blocks",
+  "cookingtime": 900,
+  "experience": 1.0,
+  "group": "iron",
+  "ingredient": "minecraft:raw_iron_block",
+  "result": {
+    "id": "minecraft:iron_block"
+  }
+}

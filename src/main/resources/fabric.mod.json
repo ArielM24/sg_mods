@@ -20,6 +20,9 @@
 		],
 		"client": [
 			"com.sg.mods.SGModsClient"
+		],
+		"fabric-datagen": [
+			"com.sg.mods.SGRecipesDataGenerator"
 		]
 	},
 	"mixins": [

@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "building",
+  "group": "glowstone",
+  "ingredients": [
+    "minecraft:glowstone"
+  ],
+  "result": {
+    "count": 4,
+    "id": "minecraft:glowstone_dust"
+  }
+}

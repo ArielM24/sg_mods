@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "group": "poweder snow",
+  "key": {
+    "l": "minecraft:snow_block",
+    "w": "minecraft:bucket"
+  },
+  "pattern": [
+    "wl"
+  ],
+  "result": {
+    "count": 1,
+    "id": "minecraft:powder_snow_bucket"
+  }
+}
