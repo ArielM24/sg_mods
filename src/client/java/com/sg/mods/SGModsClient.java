@@ -1,6 +1,7 @@
 package com.sg.mods;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.lwjgl.glfw.GLFW;
@@ -8,20 +9,33 @@ import org.lwjgl.glfw.GLFW;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
+import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.hud.VanillaHudElements;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.font.TextRenderer;
+import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.network.ClientPlayerEntity;
+import net.minecraft.client.render.RenderTickCounter;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.item.CompassItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
 import net.minecraft.util.Hand;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 
 public class SGModsClient implements ClientModInitializer {
+	private static final Identifier HUD_LAYER = Identifier.of(SGMods.MOD_ID, "compass-layer");
 	@Override
 	public void onInitializeClient() {
 		initAttack();
 		initElytra();
+		initCompass();
 	}
 
 	public static void initAttack(){
@@ -74,5 +88,35 @@ public class SGModsClient implements ClientModInitializer {
 	public static void initElytra(){
 		SwapKeyBinding keyBinding = new SwapKeyBinding("SG Elytra swap", GLFW.GLFW_KEY_Z, "SG Elytra swap");
 		KeyBindingHelper.registerKeyBinding(keyBinding);
+	}
+	private static void initCompass(){
+		HudElementRegistry.attachElementBefore(VanillaHudElements.HOTBAR, HUD_LAYER, SGModsClient::renderCompass);
+	}
+	private static void renderCompass(DrawContext ctx, RenderTickCounter tickCounter) {
+		MinecraftClient client = MinecraftClient.getInstance();
+		ClientPlayerEntity player = client.player;
+		TextRenderer renderer = client.textRenderer;
+		BlockPos pos = player.getBlockPos();
+		PlayerInventory inv = client.player.getInventory();
+		boolean hasCompass = inv.contains(is -> {
+			return (is.getItem().toString().endsWith("compass") || is.getItem() instanceof CompassItem);
+		});
+		float degrees = MathHelper.wrapDegrees(player.getYaw());
+		if (degrees < 0) {
+			degrees += 360;
+		}
+		int facing = Math.round(degrees / 45);
+		List<String> direction = Arrays.asList("S", "SW", "W", "NW", "N", "NE", "E", "SE", "S");
+		
+		if (hasCompass) {
+			String displayFacing = direction.get(facing);
+			String displayCoords = pos.toShortString();
+			String displayBiome = client.world.getBiome(pos).getIdAsString().replaceAll("minecraft:", "").replaceAll("_", " ");
+
+			ctx.drawText(renderer, String.format("%s %s", displayFacing, displayCoords), 10, 10,
+					0xFFFFFFFF, false);
+			ctx.drawText(renderer, String.format("%s%s", displayBiome.substring(0, 1).toUpperCase(), displayBiome.substring(1)), 10, 20,
+					0xFFFFFFFF, false);
+		}
 	}
 }
