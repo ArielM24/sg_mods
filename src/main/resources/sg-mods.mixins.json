@@ -4,7 +4,8 @@
 	"compatibilityLevel": "JAVA_21",
 	"mixins": [
 		"SGEnchanmentsMixin",
-		"DataSaverMixin"
+		"DataSaverMixin",
+		"ShieldMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1
