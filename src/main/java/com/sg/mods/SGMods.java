@@ -4,7 +4,11 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.block.FacingBlock;
+import net.minecraft.block.enums.Orientation;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.Enchantments;
@@ -25,8 +29,11 @@ import net.minecraft.registry.entry.RegistryEntry.Reference;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.stat.Stats;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.math.Direction;
 import net.minecraft.world.Difficulty;
+import net.minecraft.state.property.Properties;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -54,6 +61,12 @@ public class SGMods implements ModInitializer {
 	public static final List<RegistryKey<Enchantment>> shieldEnchantments = List.of(Enchantments.THORNS);
 	private static DynamicRegistryManager dynamicRegistryManager;
 	public static final int EXPERIENCE_PER_BOTTLE = 30;
+	public static ArrayList<Direction> verticalFacings = new ArrayList<>();
+	public static ArrayList<Direction> horizontalFacings = new ArrayList<>();
+	public static ArrayList<Block> horizontalFacingBlocks = new ArrayList<>();
+	public static ArrayList<Block> verticalFacingBlocks = new ArrayList<>();
+	public static ArrayList<Orientation> crafterOrientations = new ArrayList<>();
+	public static ArrayList<Direction> hopperFacings = new ArrayList<>();
 
 	@Override
 	public void onInitialize() {
@@ -62,6 +75,7 @@ public class SGMods implements ModInitializer {
 		initXPStore();
 		initSpawns();
 		initTrims();
+		initRotation();
 	}
 
 	public static void initBedrock(){
@@ -173,5 +187,125 @@ public class SGMods implements ModInitializer {
 			}
 			applyTrim(entity, world);
 		});	
+	}
+	public static void initRotation(){
+		if (verticalFacings.isEmpty()) {
+			verticalFacings.add(Direction.NORTH);
+			verticalFacings.add(Direction.EAST);
+			verticalFacings.add(Direction.SOUTH);
+			verticalFacings.add(Direction.WEST);
+			verticalFacings.add(Direction.UP);
+			verticalFacings.add(Direction.DOWN);
+		}
+		if (hopperFacings.isEmpty()) {
+			hopperFacings.add(Direction.NORTH);
+			hopperFacings.add(Direction.EAST);
+			hopperFacings.add(Direction.SOUTH);
+			hopperFacings.add(Direction.WEST);
+			hopperFacings.add(Direction.DOWN);
+		}
+		if (horizontalFacings.isEmpty()) {
+			horizontalFacings.add(Direction.NORTH);
+			horizontalFacings.add(Direction.EAST);
+			horizontalFacings.add(Direction.SOUTH);
+			horizontalFacings.add(Direction.WEST);
+		}
+		if (horizontalFacingBlocks.isEmpty()) {
+			horizontalFacingBlocks.add(Blocks.COMPARATOR);
+			horizontalFacingBlocks.add(Blocks.REPEATER);
+		}
+		if (verticalFacingBlocks.isEmpty()) {
+			verticalFacingBlocks.add(Blocks.DISPENSER);
+			verticalFacingBlocks.add(Blocks.DROPPER);
+			verticalFacingBlocks.add(Blocks.PISTON);
+			verticalFacingBlocks.add(Blocks.STICKY_PISTON);
+			verticalFacingBlocks.add(Blocks.OBSERVER);
+			verticalFacingBlocks.add(Blocks.BARREL);
+		}
+		if (crafterOrientations.isEmpty()) {
+			crafterOrientations.add(Orientation.EAST_UP);
+			crafterOrientations.add(Orientation.NORTH_UP);
+			crafterOrientations.add(Orientation.SOUTH_UP);
+			crafterOrientations.add(Orientation.WEST_UP);
+				
+			crafterOrientations.add(Orientation.UP_EAST);
+			crafterOrientations.add(Orientation.UP_NORTH);
+			crafterOrientations.add(Orientation.UP_SOUTH);
+			crafterOrientations.add(Orientation.UP_WEST);
+
+			crafterOrientations.add(Orientation.DOWN_EAST);
+			crafterOrientations.add(Orientation.DOWN_NORTH);
+			crafterOrientations.add(Orientation.DOWN_SOUTH);
+			crafterOrientations.add(Orientation.DOWN_WEST);
+		
+		}
+		UseBlockCallback.EVENT.register((player, world, hand, result) -> {
+			ItemStack itemInHand = player.getStackInHand(hand);
+			boolean isUsingtrialShield = itemInHand.getItem().getName().getString()
+					.equals(Items.SHIELD.getName().getString());
+			BlockState blockState = world.getBlockState(result.getBlockPos());
+			final Block block = blockState.getBlock();
+
+			boolean isInteractingWithVerticalFacing = verticalFacingBlocks.stream()
+					.anyMatch(b -> b.getName().getString().equals(block.getName().getString()));
+
+			boolean isInteractingWithHorizontalFacing = horizontalFacingBlocks.stream()
+					.anyMatch(b -> b.getName().getString().equals(block.getName().getString()));
+
+			boolean isInteractingWithCrafter = block.getName().getString()
+					.equals(Blocks.CRAFTER.getName().getString());
+			boolean isInteractingWithHopper = block.getName().getString()
+					.equals(Blocks.HOPPER.getName().getString());
+
+			if (!isUsingtrialShield) {
+				return ActionResult.PASS;
+			}
+			if (!player.isInSneakingPose()) {
+				return ActionResult.PASS;
+			}
+			if (!(isInteractingWithHorizontalFacing || isInteractingWithVerticalFacing || isInteractingWithCrafter || isInteractingWithHopper)) {
+				return ActionResult.PASS;
+			}
+			Direction facing = Direction.DOWN;
+			int nextFacing = 0;
+			if (isInteractingWithVerticalFacing) {
+				facing = blockState.get(FacingBlock.FACING);
+				nextFacing = verticalFacings.indexOf(facing) + 1;
+				if (nextFacing > 5) {
+					nextFacing = 0;
+				}
+				facing = verticalFacings.get(nextFacing);
+				blockState = blockState.with(FacingBlock.FACING, facing);
+
+			} else if (isInteractingWithHorizontalFacing) {
+				facing = blockState.get(Properties.HORIZONTAL_FACING);
+				nextFacing = horizontalFacings.indexOf(facing) + 1;
+				if (nextFacing > 3) {
+					nextFacing = 0;
+				}
+				facing = horizontalFacings.get(nextFacing);
+				blockState = blockState.with(Properties.HORIZONTAL_FACING, facing);
+			} else if (isInteractingWithCrafter) {
+				Orientation orientation = blockState.get(Properties.ORIENTATION);
+				nextFacing = crafterOrientations.indexOf(orientation) + 1;
+				if (nextFacing > 11) {
+					nextFacing = 0;
+				}
+				orientation = crafterOrientations.get(nextFacing);
+				blockState = blockState.with(Properties.ORIENTATION, orientation);
+			}else if(isInteractingWithHopper){
+				facing = blockState.get(Properties.HOPPER_FACING);
+				nextFacing = hopperFacings.indexOf(facing) + 1;
+				if (nextFacing > 4) {
+					nextFacing = 0;
+				}
+				facing = hopperFacings.get(nextFacing);
+				blockState = blockState.with(Properties.HOPPER_FACING, facing);
+			}else {
+				return ActionResult.PASS;
+			}
+			world.setBlockState(result.getBlockPos(), blockState);
+			return ActionResult.SUCCESS;
+		});
 	}
 }
