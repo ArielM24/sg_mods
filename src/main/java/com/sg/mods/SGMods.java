@@ -20,6 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.sg.mods.events.RecoverExpEvent;
+import com.sg.mods.events.SpawnEvents;
 import com.sg.mods.events.StoreExpEvent;
 
 public class SGMods implements ModInitializer {
@@ -45,6 +46,7 @@ public class SGMods implements ModInitializer {
 		initBedrock();
 		initEchantments();
 		initXPStore();
+		initSpawns();
 	}
 
 	public static void initBedrock(){
@@ -88,5 +90,11 @@ public class SGMods implements ModInitializer {
 	public static void initXPStore(){
 		StoreExpEvent.registerStoreXP();
 		RecoverExpEvent.registerUseExperienceBottle();
+	}
+	public static void initSpawns(){
+		SpawnEvents.registerBreezeSpawn();
+		SpawnEvents.registerCaveSpiderSpawn();
+		SpawnEvents.registerSilverfishSpawn();
+		SpawnEvents.registerIllusionerSpawn();
 	}
 }

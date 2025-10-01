@@ -3,7 +3,8 @@
 	"package": "com.sg.mods.mixin",
 	"compatibilityLevel": "JAVA_21",
 	"mixins": [
-		"SGEnchanmentsMixin"
+		"SGEnchanmentsMixin",
+		"DataSaverMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1
