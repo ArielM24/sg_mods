@@ -19,6 +19,9 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.sg.mods.events.RecoverExpEvent;
+import com.sg.mods.events.StoreExpEvent;
+
 public class SGMods implements ModInitializer {
 	public static final String MOD_ID = "sg-mods";
 
@@ -35,11 +38,13 @@ public class SGMods implements ModInitializer {
 	public static final List<RegistryKey<Enchantment>> protectionEnchantments = List.of(Enchantments.PROTECTION, Enchantments.PROJECTILE_PROTECTION, Enchantments.BLAST_PROTECTION, Enchantments.FIRE_PROTECTION);
 	public static final List<RegistryKey<Enchantment>> shieldEnchantments = List.of(Enchantments.THORNS);
 	private static DynamicRegistryManager dynamicRegistryManager;
+	public static final int EXPERIENCE_PER_BOTTLE = 30;
 
 	@Override
 	public void onInitialize() {
 		initBedrock();
 		initEchantments();
+		initXPStore();
 	}
 
 	public static void initBedrock(){
@@ -78,5 +83,10 @@ public class SGMods implements ModInitializer {
 		ServerLifecycleEvents.SERVER_STARTED.register(server->{
 			dynamicRegistryManager = server.getRegistryManager();
 		});
+	}
+
+	public static void initXPStore(){
+		StoreExpEvent.registerStoreXP();
+		RecoverExpEvent.registerUseExperienceBottle();
 	}
 }
