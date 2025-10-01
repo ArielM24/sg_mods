@@ -1,10 +1,12 @@
 package com.sg.mods;
 
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.fabricmc.fabric.api.item.v1.DefaultItemComponentEvents;
+import net.minecraft.advancement.criterion.Criteria;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -15,9 +17,14 @@ import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EquipmentSlot;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.entity.mob.SkeletonEntity;
 import net.minecraft.entity.mob.ZombieEntity;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -28,6 +35,7 @@ import net.minecraft.registry.DynamicRegistryManager;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.entry.RegistryEntry.Reference;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.stat.Stats;
 import net.minecraft.util.ActionResult;
@@ -250,6 +258,7 @@ public class SGMods implements ModInitializer {
 		initTrims();
 		initRotation();
 		initStacks();
+		initTotem();
 	}
 
 	public static void initBedrock(){
@@ -494,6 +503,37 @@ public class SGMods implements ModInitializer {
 					builder.add(DataComponentTypes.MAX_STACK_SIZE, 16);
 				});
 			}
+		});
+	}
+	public static void initTotem(){
+		ServerLivingEntityEvents.ALLOW_DEATH.register((LivingEntity le, DamageSource ds, float damageAmount) -> {
+			if (!(le instanceof ServerPlayerEntity)) {
+				return true;
+			}
+			ServerPlayerEntity player = (ServerPlayerEntity) le;
+			PlayerInventory inv = player.getInventory();
+
+			if (!inv.contains(is -> is.getItem().equals(Items.TOTEM_OF_UNDYING))) {
+				return true;
+			}
+			ItemStack totemstack = null;
+			for (int i = 0; i < inv.size(); i++) {
+				ItemStack stack = inv.getStack(i);
+				if (stack.getItem().equals(Items.TOTEM_OF_UNDYING)) {
+					totemstack = stack;
+					break;
+				}
+			}
+			player.increaseStat(Stats.USED.getOrCreateStat(Items.TOTEM_OF_UNDYING), 1);
+			Criteria.USED_TOTEM.trigger(player, totemstack);
+			player.setHealth(1.0F);
+			player.clearStatusEffects();
+			player.addStatusEffect(new StatusEffectInstance(StatusEffects.ABSORPTION, 100, 1));
+			player.addStatusEffect(new StatusEffectInstance(StatusEffects.FIRE_RESISTANCE, 800, 0));
+			player.addStatusEffect(new StatusEffectInstance(StatusEffects.REGENERATION, 900, 1));
+			player.getEntityWorld().sendEntityStatus(player, (byte)35);
+			totemstack.setCount(totemstack.getCount() - 1);
+			return false;
 		});
 	}
 }
