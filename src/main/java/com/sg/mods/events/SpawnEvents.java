@@ -46,14 +46,14 @@ public class SpawnEvents {
                 return;
             }
             BlazeEntity blaze = (BlazeEntity) entity;
-            if(((IEntityDataSaver)entity).getChecked()){
+            if(((IEntityDataSaver)entity).getSpawnChecked()){
 				return;
 			}
             RegistryKey<Biome> biome = serverLevel.getBiome(blaze.getBlockPos()).getKey().get();
             if(!biome.toString().startsWith(BiomeKeys.WARPED_FOREST.toString())){
                 return;
             }
-			((IEntityDataSaver)entity).setChecked(true);
+			((IEntityDataSaver)entity).setSpawnChecked(true);
             boolean willSpawn = r.nextInt(100) <= breezeSpawnRatio;
             if (!willSpawn) {
                 return;
@@ -93,10 +93,10 @@ public class SpawnEvents {
                 return;
             }
             SpiderEntity spider = (SpiderEntity) entity;
-            if(((IEntityDataSaver)entity).getChecked()){
+            if(((IEntityDataSaver)entity).getSpawnChecked()){
 				return;
 			}
-			((IEntityDataSaver)entity).setChecked(true);
+			((IEntityDataSaver)entity).setSpawnChecked(true);
             boolean willSpawn = r.nextInt(100) <= caveSpiderSpawnRatio;
             if (!willSpawn) {
                 return;
@@ -134,10 +134,10 @@ public class SpawnEvents {
                 return;
             }
             EvokerEntity evoker = (EvokerEntity) entity;
-            if(((IEntityDataSaver)entity).getChecked()){
+            if(((IEntityDataSaver)entity).getSpawnChecked()){
 				return;
 			}
-			((IEntityDataSaver)entity).setChecked(true);
+			((IEntityDataSaver)entity).setSpawnChecked(true);
             boolean willSpawn = r.nextInt(100) <= illusionerSpawnRatio;
             if (!willSpawn) {
                 return;
@@ -177,10 +177,10 @@ public class SpawnEvents {
                 return;
             }
             BatEntity bat = (BatEntity) entity;
-            if(((IEntityDataSaver)entity).getChecked()){
+            if(((IEntityDataSaver)entity).getSpawnChecked()){
 				return;
 			}
-			((IEntityDataSaver)entity).setChecked(true);
+			((IEntityDataSaver)entity).setSpawnChecked(true);
             boolean willSpawn = r.nextInt(100) <= silverfishSpiderSpawnRatio;
             if (!willSpawn) {
                 return;
@@ -206,10 +206,10 @@ public class SpawnEvents {
                 return;
             }
             ZombieEntity zombie = (ZombieEntity) entity;
-            if(((IEntityDataSaver)entity).getChecked()){
+            if(((IEntityDataSaver)entity).getSpawnChecked()){
 				return;
 			}
-			((IEntityDataSaver)entity).setChecked(true);
+			((IEntityDataSaver)entity).setSpawnChecked(true);
            
             boolean willSpawn = r.nextInt(100) <= zombieHorseSpawnRatio;
             if (!willSpawn) {
