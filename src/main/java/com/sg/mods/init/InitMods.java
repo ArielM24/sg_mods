@@ -1,14 +1,11 @@
 package com.sg.mods.init;
 
-import com.sg.mods.events.AutoAttackEvents;
 import com.sg.mods.events.BedrockBreakerEvents;
-import com.sg.mods.events.CompassEvents;
 import com.sg.mods.events.ExpStorerEvents;
 import com.sg.mods.events.MobSpawnEvents;
 import com.sg.mods.events.MobTrimsEvents;
 import com.sg.mods.events.RotationEvents;
 import com.sg.mods.events.StackEvents;
-import com.sg.mods.events.SwapElytraEvents;
 import com.sg.mods.events.TotemEvents;
 import com.sg.mods.events.TradesEvents;
 import com.sg.mods.events.VaultEvents;
@@ -53,14 +50,5 @@ public class InitMods {
     }
     public static void initVaultEvents(){
         VaultEvents.registerVaultEvent();
-    }
-    public static void initAutoAttackEvents(){
-        AutoAttackEvents.registerAttackEvent();
-    }
-    public static void initCompassEvents(){
-        CompassEvents.registerRenderCompassEvent();
-    }
-    public static void initSwapElytraEvents(){
-        SwapElytraEvents.registerSwapElytraEvent();
     }
 }

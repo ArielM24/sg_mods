@@ -22,7 +22,7 @@
 			"com.sg.mods.SGModsClient"
 		],
 		"fabric-datagen": [
-			"com.sg.mods.SGRecipesDataGenerator"
+			"com.sg.mods.util.SGRecipesDataGenerator"
 		]
 	},
 	"mixins": [
