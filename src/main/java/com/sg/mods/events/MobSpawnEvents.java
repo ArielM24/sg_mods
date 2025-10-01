@@ -1,9 +1,9 @@
 package com.sg.mods.events;
 
-import java.rmi.registry.Registry;
 import java.util.Random;
 
 import com.sg.mods.interfaces.IEntityDataSaver;
+import com.sg.mods.util.ModConstants;
 
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents;
 import net.minecraft.entity.EntityType;
@@ -28,16 +28,10 @@ import net.minecraft.world.Difficulty;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.BiomeKeys;
 
-public class SpawnEvents {
+public class MobSpawnEvents {
     public static final Random r = new Random();
 
-    public static final int illusionerSpawnRatio = 30;
-    public static final int breezeSpawnRatio = 70;
-    public static final int caveSpiderSpawnRatio = 85;
-    public static final int silverfishSpiderSpawnRatio = 50;
-    public static final int zombieHorseSpawnRatio = 5;
-
-    public static void registerBreezeSpawn() {
+    public static void registerBreezeSpawnEvent() {
         ServerEntityEvents.ENTITY_LOAD.register((entity, serverLevel) -> {
             if (!entity.getEntityWorld().getDifficulty().equals(Difficulty.HARD)) {
                 return;
@@ -54,7 +48,7 @@ public class SpawnEvents {
                 return;
             }
 			((IEntityDataSaver)entity).setSpawnChecked(true);
-            boolean willSpawn = r.nextInt(100) <= breezeSpawnRatio;
+            boolean willSpawn = r.nextInt(100) <= ModConstants.breezeSpawnRatio;
             if (!willSpawn) {
                 return;
             }
@@ -84,7 +78,7 @@ public class SpawnEvents {
         });
     }
 
-    public static void registerCaveSpiderSpawn() {
+    public static void registerCaveSpiderSpawnEvent() {
         ServerEntityEvents.ENTITY_LOAD.register((entity, serverLevel) -> {
             if (!entity.getEntityWorld().getDifficulty().equals(Difficulty.HARD)) {
                 return;
@@ -97,7 +91,7 @@ public class SpawnEvents {
 				return;
 			}
 			((IEntityDataSaver)entity).setSpawnChecked(true);
-            boolean willSpawn = r.nextInt(100) <= caveSpiderSpawnRatio;
+            boolean willSpawn = r.nextInt(100) <= ModConstants.caveSpiderSpawnRatio;
             if (!willSpawn) {
                 return;
             }
@@ -125,7 +119,7 @@ public class SpawnEvents {
         });
     }
 
-    public static void registerIllusionerSpawn() {
+    public static void registerIllusionerSpawnEvent() {
         ServerEntityEvents.ENTITY_LOAD.register((entity, serverLevel) -> {
             if (!entity.getEntityWorld().getDifficulty().equals(Difficulty.HARD)) {
                 return;
@@ -138,7 +132,7 @@ public class SpawnEvents {
 				return;
 			}
 			((IEntityDataSaver)entity).setSpawnChecked(true);
-            boolean willSpawn = r.nextInt(100) <= illusionerSpawnRatio;
+            boolean willSpawn = r.nextInt(100) <= ModConstants.illusionerSpawnRatio;
             if (!willSpawn) {
                 return;
             }
@@ -168,7 +162,7 @@ public class SpawnEvents {
         });
     }
 
-    public static void registerSilverfishSpawn() {
+    public static void registerSilverfishSpawnEvent() {
         ServerEntityEvents.ENTITY_LOAD.register((entity, serverLevel) -> {
             if (!entity.getEntityWorld().getDifficulty().equals(Difficulty.HARD)) {
                 return;
@@ -181,7 +175,7 @@ public class SpawnEvents {
 				return;
 			}
 			((IEntityDataSaver)entity).setSpawnChecked(true);
-            boolean willSpawn = r.nextInt(100) <= silverfishSpiderSpawnRatio;
+            boolean willSpawn = r.nextInt(100) <= ModConstants.silverfishSpiderSpawnRatio;
             if (!willSpawn) {
                 return;
             }
@@ -194,7 +188,7 @@ public class SpawnEvents {
         });
     }
 
-    public static void registerZombieHorseSpawn() {
+    public static void registerZombieHorseSpawnEvent() {
         ServerEntityEvents.ENTITY_LOAD.register((entity, serverLevel) -> {
             if(!serverLevel.isThundering()){
                 return;
@@ -211,7 +205,7 @@ public class SpawnEvents {
 			}
 			((IEntityDataSaver)entity).setSpawnChecked(true);
            
-            boolean willSpawn = r.nextInt(100) <= zombieHorseSpawnRatio;
+            boolean willSpawn = r.nextInt(100) <= ModConstants.zombieHorseSpawnRatio;
             if (!willSpawn) {
                 return;
             }
