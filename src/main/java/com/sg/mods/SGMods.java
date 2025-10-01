@@ -5,6 +5,7 @@ import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
+import net.fabricmc.fabric.api.event.player.UseEntityCallback;
 import net.fabricmc.fabric.api.item.v1.DefaultItemComponentEvents;
 import net.fabricmc.fabric.api.object.builder.v1.trade.TradeOfferHelper;
 import net.minecraft.advancement.criterion.Criteria;
@@ -25,6 +26,7 @@ import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.entity.mob.SkeletonEntity;
 import net.minecraft.entity.mob.ZombieEntity;
+import net.minecraft.entity.passive.VillagerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -41,6 +43,7 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.stat.Stats;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.math.Direction;
+import net.minecraft.village.TradeOffer;
 import net.minecraft.village.TradeOffers.BuyItemFactory;
 import net.minecraft.village.TradeOffers.SellItemFactory;
 import net.minecraft.village.VillagerProfession;
@@ -264,6 +267,7 @@ public class SGMods implements ModInitializer {
 		initStacks();
 		initTotem();
 		initTrades();
+		initUnlimitedTrades();
 	}
 
 	public static void initBedrock(){
@@ -618,6 +622,24 @@ public class SGMods implements ModInitializer {
 		// WEAPONSMITH
 		TradeOfferHelper.registerVillagerOffers(VillagerProfession.WEAPONSMITH, 3, (consumer) -> {
 			consumer.add(new SellItemFactory(Items.TNT, 1, 4, 4, 1));
+		});
+	}
+
+	public static void initUnlimitedTrades(){
+		UseEntityCallback.EVENT.register((player, world, hand, entity, result)->{
+			if(world.isClient()){
+				return ActionResult.PASS;
+			}
+			if(!(entity instanceof VillagerEntity)){
+				return ActionResult.PASS;				
+			}
+			VillagerEntity villager = (VillagerEntity)entity;
+			for(TradeOffer offer: villager.getOffers()){
+				offer.resetUses();
+				offer.updateDemandBonus();
+			}
+			
+			return ActionResult.PASS;
 		});
 	}
 }
