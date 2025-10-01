@@ -1,4 +1,4 @@
-package com.sg.mods;
+package com.sg.mods.util;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.InventoryScreen;

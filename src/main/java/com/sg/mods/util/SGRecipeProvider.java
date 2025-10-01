@@ -1,4 +1,4 @@
-package com.sg.mods;
+package com.sg.mods.util;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
