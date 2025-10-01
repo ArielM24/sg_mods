@@ -1,0 +1,41 @@
+{
+	"schemaVersion": 1,
+	"id": "sg-mods",
+	"version": "${version}",
+	"name": "SG Mods",
+	"description": "SG mods",
+	"authors": [
+		"ArielM24"
+	],
+	"contact": {
+		"homepage": "https://github.com/ArielM24/sg_mods",
+		"sources": "https://github.com/ArielM24/sg_mods"
+	},
+	"license": "CC0-1.0",
+	"icon": "assets/sg-mods/sg_mods.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"com.sg.mods.SGMods"
+		],
+		"client": [
+			"com.sg.mods.SGModsClient"
+		]
+	},
+	"mixins": [
+		"sg-mods.mixins.json",
+		{
+			"config": "sg-mods.client.mixins.json",
+			"environment": "client"
+		}
+	],
+	"depends": {
+		"fabricloader": ">=0.17.2",
+		"minecraft": "~1.21.9",
+		"java": ">=21",
+		"fabric-api": "*"
+	},
+	"suggests": {
+		"another-mod": "*"
+	}
+}
